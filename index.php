@@ -74,8 +74,8 @@
   async function init() {
     const appContainerStr = await getSiteInfo(state);
     output.innerHTML = appContainerStr;
-    const postData = await getPosts();
     const postContainer = document.getElementById('output');
+    const postData = await getPosts();
     postContainer.appendChild(postData);
   }
   window.onload = init;
