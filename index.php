@@ -20,6 +20,7 @@
   }
   const getPost = e => {
     e.preventDefault();
+    location = e.target.href;
     const id = e.target.id;
     const post = state.posts.find(post => post.id == id);
     const title = `<h1>${post.title.rendered}</h1>`;
@@ -40,7 +41,7 @@
           const anchor = document.createElement('a');
           item.appendChild(anchor);
           anchor.text = post.title.rendered;
-          anchor.href = post.link;
+          anchor.href = `/#/${post.slug}`;
           anchor.id = post.id;
           anchor.onclick = getPost;
           list.appendChild(item);
@@ -78,7 +79,12 @@
     const postData = await getPosts();
     postContainer.appendChild(postData);
   }
-  window.onload = init;
+  window.addEventListener('DOMContentLoaded', e => init());
+  window.addEventListener('popstate', e => {
+    if ( location.hash === '' ) {
+      init();
+    }
+  });
 }())
 </script>
 </body>
