@@ -16,12 +16,39 @@
       description: ''
     }
   }
+  class Component {
+    constructor(element, ...children) {
+      this.element = element;
+      this.children = children || [];
+    }
+    // Creates a DOM element and nests children
+    create () {
+      const elType = typeof this.element === 'string' 
+        ? this.element
+        : 'div';
+      const el = document.createElement(elType);
+      const childCount = this.children.length;
+      if (!childCount) {
+        return el;
+      }
+      for (let i = 0; i < childCount; i += 1) {
+        const child = this.children[i];
+        if ( typeof child === 'string' ) {
+          el.textContent = child;
+        } else if ( typeof child === 'object' ) {
+          el.appendChild(child);
+        }
+      }
+      return el;
+    }
+  }
   const getPost = e => {
     e.preventDefault();
     location = e.target.href;
     const id = e.target.id;
     const post = state.posts.find(post => post.id == id);
     const title = `<h1>${post.title.rendered}</h1>`;
+    console.log('title type: ', typeof title);
     const body = `<div>${post.content.rendered}</div>`;
     const article =`<article>${title}${body}</article>`;
     const contentContainer = document.getElementById('content-body');
@@ -54,12 +81,14 @@
       })
   }
   const appContainer = () => {
-    let content = `<header>`;
-    content += `<h1>FOO${state.siteInfo.name}</h1>`;
-    content += `<h2>${state.siteInfo.description}</h2>`;
-    content += `<div id="content-body"></div>`;
-    content += '</header>';
-    return content;
+    const h1 = new Component('h1', state.siteInfo.name).create();
+    const h2 = new Component('h2', state.siteInfo.description).create();
+    const header = new Component('header', h1, h2).create();
+
+    const main = new Component('div').create();
+    main.id = 'content-body';
+
+    return new Component('div', header, main).create();
   }
   const getSiteInfo = (state) => {
     return fetch('/wp-json')
@@ -76,10 +105,12 @@
       .then(() => appContainer())     
   }
   async function init() {
-    const appContainerStr = await getSiteInfo(state);
-    root.innerHTML = appContainerStr;
+    root.innerHTML = '';
+    const appContainer = await getSiteInfo(state);
+    root.appendChild(appContainer);
     const postContainer = document.getElementById('content-body');
     const postData = await getPosts();
+    console.log('postData type: ', typeof postData);
     postContainer.appendChild(postData);
   }
   window.addEventListener('DOMContentLoaded', e => init());
