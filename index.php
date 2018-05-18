@@ -5,12 +5,10 @@
   <title>tn headless wp theme</title>
 </head>
 <body>
-  <div id="app">
-    <p>Loading...</p>
-  </div>
+  <div id="root"></div>
 <script>
 (function(){
-  const output = document.getElementById('app');
+  const root = document.getElementById('root');
   const state = {
     posts: [],
     siteInfo: {
@@ -26,7 +24,7 @@
     const title = `<h1>${post.title.rendered}</h1>`;
     const body = `<div>${post.content.rendered}</div>`;
     const article =`<article>${title}${body}</article>`;
-    const contentContainer = document.getElementById('output');
+    const contentContainer = document.getElementById('content-body');
     contentContainer.innerHTML = article;
   }
   const getPosts = () => {
@@ -56,31 +54,37 @@
       })
   }
   const appContainer = () => {
-    let content = `<h1>${state.siteInfo.name}</h1>`;
+    let content = `<header>`;
+    content += `<h1>FOO${state.siteInfo.name}</h1>`;
     content += `<h2>${state.siteInfo.description}</h2>`;
-    content += `<div id="output"></div>`;
+    content += `<div id="content-body"></div>`;
+    content += '</header>';
     return content;
   }
   const getSiteInfo = (state) => {
     return fetch('/wp-json')
       .then(res => res.json())
       .then(json => {
-        state = Object.assign(state, {'siteInfo': {
-          description: json.description,
-          name: json.name
-        }})
-        return appContainer();
-      });     
+        state = Object.assign(state, {
+            'siteInfo': {
+              description: json.description,
+              name: json.name
+            }
+          }
+        );
+      })
+      .then(() => appContainer())     
   }
   async function init() {
     const appContainerStr = await getSiteInfo(state);
-    output.innerHTML = appContainerStr;
-    const postContainer = document.getElementById('output');
+    root.innerHTML = appContainerStr;
+    const postContainer = document.getElementById('content-body');
     const postData = await getPosts();
     postContainer.appendChild(postData);
   }
   window.addEventListener('DOMContentLoaded', e => init());
   window.addEventListener('popstate', e => {
+    console.log('popstate fired');
     if ( location.hash === '' ) {
       init();
     }
