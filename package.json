@@ -4,6 +4,8 @@
   "description": "JavaScript front end for WordPress.",
   "main": "index.js",
   "scripts": {
+    "start": "webpack",
+    "build": "webpack -p",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,5 +26,12 @@
   "bugs": {
     "url": "https://github.com/teeehn/tn-headless-wp/issues"
   },
-  "homepage": "https://github.com/teeehn/tn-headless-wp#readme"
+  "homepage": "https://github.com/teeehn/tn-headless-wp#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2015": "^6.24.1",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
+  }
 }
