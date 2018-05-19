@@ -1,0 +1,28 @@
+{
+  "name": "tn-headless",
+  "version": "1.0.0",
+  "description": "JavaScript front end for WordPress.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teeehn/tn-headless-wp.git"
+  },
+  "keywords": [
+    "WordPress",
+    "WordPress",
+    "REST",
+    "API",
+    "JavaScript",
+    "React",
+    "Webpack"
+  ],
+  "author": "Thomas Nicolosi",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/teeehn/tn-headless-wp/issues"
+  },
+  "homepage": "https://github.com/teeehn/tn-headless-wp#readme"
+}
