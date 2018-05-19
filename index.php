@@ -54,6 +54,16 @@
     const contentContainer = document.getElementById('content-body');
     contentContainer.innerHTML = article;
   }
+  const getPostFromSlug = slug => {
+    return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
+      .then(res => res.json())
+      .then(json => {
+        const title = new Component('h1', json[0].title.rendered).create();
+        const body = new Component('article').create();
+        body.innerHTML = json[0].content.rendered;
+        return new Component('div', title, body).create();
+      })
+  }
   const getPosts = () => {
     const postContent = document.createElement('div');
     return fetch('/wp-json/wp/v2/posts')
@@ -66,9 +76,17 @@
           const anchor = document.createElement('a');
           item.appendChild(anchor);
           anchor.text = post.title.rendered;
-          anchor.href = `/#/${post.slug}`;
+          anchor.href = `${post.slug}`;
           anchor.id = post.id;
-          anchor.onclick = getPost;
+          anchor.onclick =  async function(e) {
+            e.preventDefault();
+            const link = e.target.href;
+            history.pushState(null, `${state.siteInfo.name} | ${link}`, link);
+            const thePost = await getPostFromSlug(location.pathname);
+            const contentContainer = document.getElementById('content-body');
+            contentContainer.innerHTML = '';
+            contentContainer.appendChild(thePost);
+          }
           list.appendChild(item);
         });
         postContent.innerHTML = '<h1>Posts</h1>';
@@ -108,9 +126,11 @@
     root.innerHTML = '';
     const appContainer = await getSiteInfo(state);
     root.appendChild(appContainer);
+    const slug = location.pathname;
     const postContainer = document.getElementById('content-body');
-    const postData = await getPosts();
-    console.log('postData type: ', typeof postData);
+    const postData = (slug === '/' || slug === '')
+      ? await getPosts()
+      : await getPostFromSlug(slug);
     postContainer.appendChild(postData);
   }
   window.addEventListener('DOMContentLoaded', e => init());
