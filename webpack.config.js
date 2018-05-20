@@ -25,18 +25,15 @@ const config = {
                 'sass-loader'
             ]
         },{
-            test: /\.js$/,
+            test: /\.(js|jsx)$/,
             include: path.resolve(__dirname, 'src'),
+            exclude: /(node_modules)/,
             use: [{
                 loader: 'babel-loader',
-                options: {
-                    presets: [
-                        ['es2015', { modules: false }]
-                    ]
-                }
+                options: { presets: ['env'] }
             }]
-        }]
-    }
+        }
+    ]}
 }
 
 module.exports = config;
