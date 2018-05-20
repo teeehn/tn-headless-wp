@@ -11,6 +11,12 @@ const config = {
     },
     module: {
         rules: [{
+            test: /\.(png|jpg)$/,
+            use: [{
+                loader: 'url-loader',
+                options: { limit: 10000 }
+            }]
+        },{
             test: /\.scss$/,
             include: path.resolve(__dirname, 'src/scss'),
             use: [
