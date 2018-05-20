@@ -11,6 +11,14 @@ const config = {
     },
     module: {
         rules: [{
+            test: /\.scss$/,
+            include: path.resolve(__dirname, 'src/scss'),
+            use: [
+                'style-loader',
+                'css-loader',
+                'sass-loader'
+            ]
+        },{
             test: /\.js$/,
             include: path.resolve(__dirname, 'src'),
             use: [{
