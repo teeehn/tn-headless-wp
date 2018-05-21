@@ -97,6 +97,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      location: '/',
       posts: [],
       singlePost: undefined,
       siteInfo: {
@@ -135,9 +136,16 @@ class App extends Component {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
       .then(res => res.json())
       .then(json => {
-        return Object.assign(this.state, { singlePost: json[0] })
+        return Object.assign(this.state, { 
+          location: json[0].link,
+          singlePost: json[0]
+         })
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(state.location)))
+  }
+
+  setHistory (location) {
+    window.history.pushState(null, null, location);
   }
 
   componentDidMount() {
