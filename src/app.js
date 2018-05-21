@@ -97,6 +97,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      location: '/',
       posts: [],
       singlePost: undefined,
       siteInfo: {
@@ -116,7 +117,7 @@ class App extends Component {
           }
         });
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
   getPostList () {
@@ -128,19 +129,31 @@ class App extends Component {
           singlePost: undefined
         })
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
   getSinglePost (slug) {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
       .then(res => res.json())
       .then(json => {
-        return Object.assign(this.state, { singlePost: json[0] })
+        return Object.assign(this.state, { 
+          location: json[0].link,
+          singlePost: json[0]
+         })
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(this.state)))
+  }
+
+  handlePopState(e) {
+    this.setState(e.state);
+  }
+
+  setHistory (state) {
+    window.history.pushState(state, null, state.location);
   }
 
   componentDidMount() {
+    window.addEventListener('popstate', e => this.handlePopState(e));
     this.getSiteInfo();
   }
 
