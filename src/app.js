@@ -18,7 +18,8 @@ class PostList extends Component {
   render () {
 
     const {
-      posts
+      posts,
+      getSinglePost
     } = this.props;
   
     return (
@@ -39,7 +40,13 @@ class PostList extends Component {
   
                 return (
                   <li key={id}>
-                    <a href={`/${slug}`}>{linkText}</a>
+                    <a 
+                      href={`/${slug}`}
+                      onClick={e => {
+                        e.preventDefault();
+                        getSinglePost(slug);
+                      }}
+                    >{linkText}</a>
                   </li>
                 );
               })
@@ -60,11 +67,38 @@ PostList.defaultProps = {
   posts: []
 }
 
+const SinglePost = ({ post }) => {
+  const {
+    title = {},
+    content = {}
+  } = post;
+
+  const bodyText = (str) => {
+    return { __html: str };
+  }
+
+  return (
+    <div>
+      {
+        title && title.rendered
+          ? <h2>{ title.rendered }</h2>
+          : null
+      }
+      {
+        content && content.rendered
+          ? <span dangerouslySetInnerHTML={bodyText(content.rendered)}></span>
+          : null
+      }
+    </div>
+  )
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       posts: [],
+      singlePost: undefined,
       siteInfo: {
         name: '',
         description: ''
@@ -85,15 +119,25 @@ class App extends Component {
       .then(state => this.setState(state))
   }
 
-  getPosts () {
+  getPostList () {
     return fetch('/wp-json/wp/v2/posts')
       .then(res => res.json()) // TO DO: handle error
       .then(json => {
-        return Object.assign(this.state, { posts: json })
+        return Object.assign(this.state, { 
+          posts: json,
+          singlePost: undefined
+        })
       })
-      .then(state => {
-        this.setState(state)
+      .then(state => this.setState(state))
+  }
+
+  getSinglePost (slug) {
+    return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
+      .then(res => res.json())
+      .then(json => {
+        return Object.assign(this.state, { singlePost: json[0] })
       })
+      .then(state => this.setState(state))
   }
 
   componentDidMount() {
@@ -103,6 +147,7 @@ class App extends Component {
   render () {
     const {
       posts,
+      singlePost,
       siteInfo
     } = this.state;
 
@@ -117,7 +162,17 @@ class App extends Component {
           <h1>{name}</h1>
           <h2>{description}</h2>
         </header>
-        <PostList posts={posts} getPosts={() => this.getPosts()} />
+        {
+          singlePost
+            ? <SinglePost post={singlePost} />
+            : (
+              <PostList 
+                posts={posts} 
+                getPosts={() => this.getPostList()} 
+                getSinglePost = {slug => this.getSinglePost(slug)}
+              />
+            )
+        }
       </div>
     );
   }
