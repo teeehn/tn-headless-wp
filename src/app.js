@@ -117,7 +117,7 @@ class App extends Component {
           }
         });
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
   getPostList () {
@@ -129,7 +129,7 @@ class App extends Component {
           singlePost: undefined
         })
       })
-      .then(state => this.setState(state))
+      .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
   getSinglePost (slug) {
@@ -141,14 +141,19 @@ class App extends Component {
           singlePost: json[0]
          })
       })
-      .then(state => this.setState(state, this.setHistory(state.location)))
+      .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
-  setHistory (location) {
-    window.history.pushState(null, null, location);
+  handlePopState(e) {
+    this.setState(e.state);
+  }
+
+  setHistory (state) {
+    window.history.pushState(state, null, state.location);
   }
 
   componentDidMount() {
+    window.addEventListener('popstate', e => this.handlePopState(e));
     this.getSiteInfo();
   }
 
