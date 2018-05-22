@@ -31,6 +31,20 @@ class App extends Component {
       .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
+  getPostFromSlug (slug) {
+    return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
+        .then(res => res.json())
+        .then(json => {
+            return Object.assign(this.state, {
+                singlePost: {
+                    content: json[0].content.rendered,
+                    title: json[0].title.rendered
+                }
+            })
+        .then(state => this.setState(state, this.setHistory(this.state)))
+      })
+  }
+
   getPostList () {
     return fetch('/wp-json/wp/v2/posts')
       .then(res => res.json()) // TO DO: handle error
@@ -57,6 +71,18 @@ class App extends Component {
 
   handlePopState(e) {
     this.setState(e.state);
+  }
+
+  init () {
+    const slug = location.pathname;
+    if ( (slug === '/' || slug === '') ) {
+        if ( this.state.posts.length > 0 ) {
+            return;
+        }
+        this.getPostList();
+    } else {
+        this.getPostFromSlug(slug);
+    }      
   }
 
   setHistory (state) {
