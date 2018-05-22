@@ -23,7 +23,7 @@ class PostList extends Component {
     } = this.props;
   
     return (
-      <ul>
+      <ul className="post-list">
         {
           posts && posts.length > 0 
             ? posts.map(post => {

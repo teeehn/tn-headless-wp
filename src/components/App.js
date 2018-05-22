@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { MainHeader } from './MainHeader';
 import PostList from './PostList';
 import SinglePost from './SinglePost';
 
@@ -81,10 +82,10 @@ class App extends Component {
 
     return (
       <div>
-        <header>
-          <h1>{name}</h1>
-          <h2>{description}</h2>
-        </header>
+        <MainHeader 
+            description={description} 
+            name={name} 
+        />
         {
           singlePost
             ? <SinglePost post={singlePost} />

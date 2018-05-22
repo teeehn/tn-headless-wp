@@ -12,7 +12,7 @@ const SinglePost = ({ post }) => {
   }
 
   return (
-    <div>
+    <div className="post-single">
       {
         title && title.rendered
           ? <h2>{ title.rendered }</h2>
