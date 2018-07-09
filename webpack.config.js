@@ -3,6 +3,7 @@ const path = require('path');
 
 const config = {
     context: path.resolve(__dirname, 'src'),
+    devtool: 'cheap-module-eval-source-map',
     entry: './app.js',
     mode: 'development',
     output: {
