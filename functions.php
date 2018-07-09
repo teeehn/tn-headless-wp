@@ -1,6 +1,10 @@
 <?php
 /**
  * Remove un-needed meta from the head.
+ * References:
+ *  https://developer.wordpress.org/reference/hooks/wp_head/
+ *  https://wp-mix.com/wordpress-disable-rest-api-header-links/
+ *  http://cubiq.org/clean-up-and-optimize-wordpress-for-your-next-theme
  */
 function tn_clean_head() {
     remove_action('wp_head', 'wp_generator');
