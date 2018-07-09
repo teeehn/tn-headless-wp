@@ -27,3 +27,11 @@ function tn_clean_head() {
     remove_action('template_redirect', 'rest_output_link_header', 11, 0);
 }
 add_action('after_setup_theme', 'tn_clean_head');
+
+/**
+ * Add the bundle for the application.
+ */
+function tn_add_bundle() {
+    wp_enqueue_script('tn_bundle', get_stylesheet_directory_uri() . '/dist/js/bundle.js', null, false, true);
+}
+add_action('wp_enqueue_scripts', 'tn_add_bundle');

@@ -7,6 +7,6 @@
 </head>
 <body>
   <div id="root"></div>
-<script type="text/javascript" src="/wp-content/themes/tn-headless/dist/js/bundle.js"></script>
+<?php wp_footer(); ?>
 </body>
 </html>
