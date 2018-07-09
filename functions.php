@@ -6,7 +6,7 @@
  *  https://wp-mix.com/wordpress-disable-rest-api-header-links/
  *  http://cubiq.org/clean-up-and-optimize-wordpress-for-your-next-theme
  */
-function tn_clean_head() {
+function tn_cleanup() {
     remove_action('wp_head', 'wp_generator');
     remove_action('wp_head', 'wlwmanifest_link');
     remove_action('wp_head', 'rsd_link');
@@ -26,12 +26,23 @@ function tn_clean_head() {
     // Disable REST API link in HTTP headers
     remove_action('template_redirect', 'rest_output_link_header', 11, 0);
 }
-add_action('after_setup_theme', 'tn_clean_head');
+add_action('after_setup_theme', 'tn_cleanup');
+
+/**
+ * More cleanup - remove wp-embed from wp_footer.
+ * 
+ * reference:
+ * https://techglimpse.com/wp-embed-script-feature-remove/
+ */
+function tn_cleanup_footer(){
+    wp_deregister_script( 'wp-embed' );
+   }
+add_action( 'wp_footer', 'tn_cleanup_footer' );
 
 /**
  * Add the bundle for the application.
  */
 function tn_add_bundle() {
-    wp_enqueue_script('tn_bundle', get_stylesheet_directory_uri() . '/dist/js/bundle.js', null, false, true);
+    wp_enqueue_script('tn_bundle', get_stylesheet_directory_uri() . '/dist/js/bundle.js', null, null, true);
 }
 add_action('wp_enqueue_scripts', 'tn_add_bundle');
