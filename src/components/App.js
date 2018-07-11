@@ -28,10 +28,10 @@ class App extends Component {
           }
         });
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state), this.getPostList())
   }
 
-  getPostFromSlug (slug) {
+  getPostFromSlug(slug) {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
         .then(res => res.json())
         .then(json => {
@@ -41,11 +41,11 @@ class App extends Component {
                     title: json[0].title.rendered
                 }
             })
-        .then(state => this.setState(state, this.setHistory(this.state)))
+        .then(state => this.setState(state, this.setHistory(state)))
       })
   }
 
-  getPostList () {
+  getPostList() {
     return fetch('/wp-json/wp/v2/posts')
       .then(res => res.json()) // TO DO: handle error
       .then(json => {
@@ -54,10 +54,10 @@ class App extends Component {
           singlePost: undefined
         })
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state, this.setHistory(state)))
   }
 
-  getSinglePost (slug) {
+  getSinglePost(slug) {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
       .then(res => res.json())
       .then(json => {
@@ -66,11 +66,11 @@ class App extends Component {
           singlePost: json[0]
          })
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state, this.setHistory(state)))
   }
 
-  handlePopState(e) {
-    this.setState(e.state);
+  handlePopState(state) {
+    this.setState(state);
   }
 
   init () {
@@ -85,13 +85,17 @@ class App extends Component {
     }      
   }
 
-  setHistory (state) {
+  setHistory(state) {
     window.history.pushState(state, null, state.location);
   }
 
   componentDidMount() {
-    window.addEventListener('popstate', e => this.handlePopState(e));
+    window.addEventListener('popstate', e => this.handlePopState(e.state));
     this.getSiteInfo();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', e => this.handlePopState(e.state));  
   }
 
   render () {
@@ -118,7 +122,6 @@ class App extends Component {
             : (
               <PostList 
                 posts={posts} 
-                getPosts={() => this.getPostList()} 
                 getSinglePost = {slug => this.getSinglePost(slug)}
               />
             )

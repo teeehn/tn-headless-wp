@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-const SinglePost = ({ post }) => {
+const SinglePost = props => {
+  const { post } = props;
   const {
     title = {},
     content = {}
   } = post;
 
-  const bodyText = (str) => {
+  const bodyText = str => {
     return { __html: str };
   }
 
