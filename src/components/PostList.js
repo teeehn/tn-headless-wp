@@ -7,14 +7,6 @@ class PostList extends Component {
     super(props);
   }
 
-  componentDidMount () {
-    const {
-      getPosts
-    } = this.props;
-
-    getPosts();
-  }
-
   render () {
 
     const {
@@ -58,12 +50,10 @@ class PostList extends Component {
 }
 
 PostList.propTypes = {
-  getPosts: PropTypes.func,
   posts: PropTypes.array
 }
 
 PostList.defaultProps = {
-  getPosts: () => false,
   posts: []
 }
 

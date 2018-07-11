@@ -28,7 +28,7 @@ class App extends Component {
           }
         });
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state), this.getPostList())
   }
 
   getPostFromSlug(slug) {
@@ -41,7 +41,7 @@ class App extends Component {
                     title: json[0].title.rendered
                 }
             })
-        .then(state => this.setState(state, this.setHistory(this.state)))
+        .then(state => this.setState(state, this.setHistory(state)))
       })
   }
 
@@ -54,7 +54,7 @@ class App extends Component {
           singlePost: undefined
         })
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state, this.setHistory(state)))
   }
 
   getSinglePost(slug) {
@@ -66,11 +66,11 @@ class App extends Component {
           singlePost: json[0]
          })
       })
-      .then(state => this.setState(state, this.setHistory(this.state)))
+      .then(state => this.setState(state, this.setHistory(state)))
   }
 
-  handlePopState(e) {
-    this.setState(e.state);
+  handlePopState(state) {
+    this.setState(state);
   }
 
   init () {
@@ -90,8 +90,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('popstate', e => this.handlePopState(e));
+    window.addEventListener('popstate', e => this.handlePopState(e.state));
     this.getSiteInfo();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', e => this.handlePopState(e.state));  
   }
 
   render () {
@@ -118,7 +122,6 @@ class App extends Component {
             : (
               <PostList 
                 posts={posts} 
-                getPosts={() => this.getPostList()} 
                 getSinglePost = {slug => this.getSinglePost(slug)}
               />
             )
