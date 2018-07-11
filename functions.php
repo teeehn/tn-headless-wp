@@ -34,7 +34,7 @@ add_action('after_setup_theme', 'tn_cleanup');
  * reference:
  * https://techglimpse.com/wp-embed-script-feature-remove/
  */
-function tn_cleanup_footer(){
+function tn_cleanup_footer() {
     wp_deregister_script( 'wp-embed' );
    }
 add_action( 'wp_footer', 'tn_cleanup_footer' );
