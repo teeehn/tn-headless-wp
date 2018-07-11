@@ -31,7 +31,7 @@ class App extends Component {
       .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
-  getPostFromSlug (slug) {
+  getPostFromSlug(slug) {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
         .then(res => res.json())
         .then(json => {
@@ -45,7 +45,7 @@ class App extends Component {
       })
   }
 
-  getPostList () {
+  getPostList() {
     return fetch('/wp-json/wp/v2/posts')
       .then(res => res.json()) // TO DO: handle error
       .then(json => {
@@ -57,7 +57,7 @@ class App extends Component {
       .then(state => this.setState(state, this.setHistory(this.state)))
   }
 
-  getSinglePost (slug) {
+  getSinglePost(slug) {
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
       .then(res => res.json())
       .then(json => {
@@ -85,7 +85,7 @@ class App extends Component {
     }      
   }
 
-  setHistory (state) {
+  setHistory(state) {
     window.history.pushState(state, null, state.location);
   }
 
