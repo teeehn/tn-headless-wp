@@ -20,10 +20,13 @@ class App extends Component {
   }
 
   getSiteInfo() {
+    const location = window.location.pathname || '/';
     return fetch('/wp-json')
       .then(res => res.json())
       .then(json => {
-          return Object.assign(this.state, { siteInfo: {
+        return Object.assign(this.state, { 
+          location,
+          siteInfo: {
             description: json.description,
             name: json.name,
             url: json.url
@@ -46,10 +49,12 @@ class App extends Component {
   }
 
   getSinglePost(slug) {
+    const location = `/${slug}`;
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
         .then(res => res.json())
         .then(json => {
             return Object.assign(this.state, {
+                location,
                 singlePost: {
                     content: json[0].content.rendered,
                     title: json[0].title.rendered
@@ -65,7 +70,7 @@ class App extends Component {
   }
 
   init () {
-    const slug = location.pathname;
+    const slug = location.pathname.slice(1);
     if ( (slug === '/' || slug === '') ) {
         if ( this.state.posts.length > 0 ) {
             return;
