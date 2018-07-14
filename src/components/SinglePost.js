@@ -15,13 +15,13 @@ const SinglePost = props => {
   return (
     <div className="post-single">
       {
-        title && title.rendered
-          ? <h2>{ title.rendered }</h2>
+        title
+          ? <h2>{ title }</h2>
           : null
       }
       {
-        content && content.rendered
-          ? <span dangerouslySetInnerHTML={bodyText(content.rendered)}></span>
+        content
+          ? <span dangerouslySetInnerHTML={bodyText(content)}></span>
           : null
       }
     </div>
