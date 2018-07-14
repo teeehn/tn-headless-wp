@@ -1,5 +1,20 @@
 <?php
 /**
+ * Removing redirects.
+ *  References:
+ *  https://github.com/EvanAgee/vuejs-wordpress-theme-starter
+ *  https://vuejsfeed.com/blog/vue-js-wordpress-theme-starter
+ */
+// Remove all default WP template redirects/lookups
+remove_action('template_redirect', 'redirect_canonical');
+
+// Redirect all requests to index.php so the app is loaded and 404s aren't thrown
+function remove_redirects() {
+    add_rewrite_rule('^/(.+)/?', 'index.php', 'top');
+}
+add_action('init', 'remove_redirects');
+
+/**
  * Remove un-needed meta from the head.
  * References:
  *  https://developer.wordpress.org/reference/hooks/wp_head/

@@ -12,37 +12,28 @@ class App extends Component {
       posts: [],
       singlePost: undefined,
       siteInfo: {
+        description: '',
         name: '',
-        description: ''
+        url: ''
       }
     }
   }
 
   getSiteInfo() {
+    const location = window.location.pathname || '/';
     return fetch('/wp-json')
       .then(res => res.json())
       .then(json => {
-          return Object.assign(this.state, { siteInfo: {
+        return Object.assign(this.state, { 
+          location,
+          siteInfo: {
             description: json.description,
-            name: json.name
+            name: json.name,
+            url: json.url
           }
         });
       })
-      .then(state => this.setState(state), this.getPostList())
-  }
-
-  getPostFromSlug(slug) {
-    return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
-        .then(res => res.json())
-        .then(json => {
-            return Object.assign(this.state, {
-                singlePost: {
-                    content: json[0].content.rendered,
-                    title: json[0].title.rendered
-                }
-            })
-        .then(state => this.setState(state, this.setHistory(state)))
-      })
+      .then(state => this.setState(state, this.init()))
   }
 
   getPostList() {
@@ -58,15 +49,20 @@ class App extends Component {
   }
 
   getSinglePost(slug) {
+    const location = `/${slug}`;
     return fetch(`/wp-json/wp/v2/posts?slug=${slug}`)
-      .then(res => res.json())
-      .then(json => {
-        return Object.assign(this.state, { 
-          location: json[0].link,
-          singlePost: json[0]
-         })
-      })
-      .then(state => this.setState(state, this.setHistory(state)))
+        .then(res => res.json())
+        .then(json => {
+            return Object.assign(this.state, {
+                location,
+                singlePost: {
+                    content: json[0].content.rendered,
+                    title: json[0].title.rendered
+                }
+            })
+          }
+        )
+        .then(state => this.setState(state, this.setHistory(state)))
   }
 
   handlePopState(state) {
@@ -74,14 +70,14 @@ class App extends Component {
   }
 
   init () {
-    const slug = location.pathname;
+    const slug = location.pathname.slice(1);
     if ( (slug === '/' || slug === '') ) {
         if ( this.state.posts.length > 0 ) {
             return;
         }
         this.getPostList();
     } else {
-        this.getPostFromSlug(slug);
+        this.getSinglePost(slug);
     }      
   }
 
