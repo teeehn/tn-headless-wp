@@ -58,6 +58,14 @@ add_action( 'wp_footer', 'tn_cleanup_footer' );
  * Add the bundle for the application.
  */
 function tn_add_bundle() {
-    wp_enqueue_script('tn_bundle', get_stylesheet_directory_uri() . '/dist/js/bundle.js', null, null, true);
+    wp_enqueue_script('tn_bundle', get_stylesheet_directory_uri() . '/dist/main.bundle.js', null, null, true);
 }
 add_action('wp_enqueue_scripts', 'tn_add_bundle');
+
+/**
+ * Add application stylesheet.
+ */
+function tn_add_stylesheet() {
+    wp_enqueue_style('tn_main-style', get_stylesheet_directory_uri() . '/dist/main.style.css');
+}
+add_action('wp_enqueue_scripts', 'tn_add_stylesheet');
