@@ -1,5 +1,6 @@
-const webpack = require('webpack');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
+const webpack = require('webpack');
 
 const config = {
     context: path.resolve(__dirname, 'src'),
@@ -7,9 +8,12 @@ const config = {
     entry: './app.js',
     mode: 'development',
     output: {
-        path: path.resolve(__dirname, 'dist/js'),
-        filename: 'bundle.js'
+        path: path.resolve(__dirname, 'dist'),
+        filename: '[name].bundle.js'
     },
+    plugins: [
+        new MiniCssExtractPlugin({ filename: "[name].style.css" })
+    ],
     module: {
         rules: [{
             test: /\.(png|jpg)$/,
@@ -19,11 +23,16 @@ const config = {
             }]
         },{
             test: /\.scss$/,
-            include: path.resolve(__dirname, 'src/scss'),
+            //include: path.resolve(__dirname, 'src'),
             use: [
-                'style-loader',
-                'css-loader',
-                'sass-loader'
+                //'style-loader',
+                MiniCssExtractPlugin.loader,
+                {
+                    loader: 'css-loader'
+                },
+                {
+                    loader: 'sass-loader'
+                }
             ]
         },{
             test: /\.(js|jsx)$/,
